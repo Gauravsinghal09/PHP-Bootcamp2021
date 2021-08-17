@@ -1,80 +1,80 @@
 <?php
 
-function convert_to_array($input){
-    return json_decode($input, TRUE);
-}
-
-function get_names($input){
-    $names = [];
-    foreach($input["players"] as $player){
-        array_push($names, $player["name"]);
+    function convertToArray($input){
+        return json_decode($input, TRUE);
     }
-    return $names;
-}
 
-function get_age($input){
-    $age = [];
-    foreach($input["players"] as $player){
-        array_push($age, $player["age"]);
-    }
-    return $age;
-}
-
-function get_cities($input){
-    $cities = [];
-    foreach($input["players"] as $player){
-        array_push($cities, $player["address"]["city"]);
-    }
-    return $cities;
-}
-
-function get_unique_names($names){
-    return array_unique($names);
-}
-
-function get_names_with_max_age($names, $age){
-    if (count($names) != count($age)){
-        return [];
-    }
-    $names_with_max_age = [];
-    $max_age = max($age);
-    for($i=0; $i<count($names); $i++){
-        if($age[$i] === $max_age){
-            array_push($names_with_max_age, $names[$i]);
+    function getNames($input){
+        $names = [];
+        foreach($input["players"] as $player){
+            array_push($names, $player["name"]);
         }
+        return $names;
     }
-    return $names_with_max_age;
-}
 
-$input = "{\"players\":[
-            {\"name\":\"Ganguly\",\"age\":45,\"address\":{\"city\":\"Hyderabad\"}},
-            {\"name\":\"Dravid\",\"age\":45,\"address\":{\"city\":\"Hyderabad\"}},
-            {\"name\":\"Dhoni\",\"Age\":37,\"address\":{\"city\":\"Hyderabad\"}},
-            {\"name\":\"Virat\",\"age\":35,\"address\":{\"city\":\"Hyderabad\"}},
-            {\"name\":\"Jadeja\",\"age\":35,\"address\":{\"city\":\"Hyderabad\"}},
-            {\"name\":\"Jadeja\",\"age\":35,\"address\":{\"city\":\"Hyderabad\"}}]}";
+    function getAge($input){
+        $age = [];
+        foreach($input["players"] as $player){
+            array_push($age, $player["age"]);
+        }
+        return $age;
+    }
 
-$input = strtolower($input);
+    function getCities($input){
+        $cities = [];
+        foreach($input["players"] as $player){
+            array_push($cities, $player["address"]["city"]);
+        }
+        return $cities;
+    }
 
-$input = convert_to_array($input);
+    function getUniqueNames($names){
+        return array_unique($names);
+    }
 
-$names = get_names($input);
-echo "Name of players\n";
-print_r($names);
+    function getNamesWithMaxAge($names, $age){
+        if (count($names) != count($age)){
+            return [];
+        }
+        $namesWithMaxAge = [];
+        $max_age = max($age);
+        for($i=0; $i<count($names); $i++){
+            if($age[$i] === $max_age){
+                array_push($namesWithMaxAge, $names[$i]);
+            }
+        }
+        return $namesWithMaxAge;
+    }
 
-$age = get_age($input);
-echo "Age of players\n";
-print_r($age);
+    $input = "{\"players\":[
+                {\"name\":\"Ganguly\",\"age\":45,\"address\":{\"city\":\"Hyderabad\"}},
+                {\"name\":\"Dravid\",\"age\":45,\"address\":{\"city\":\"Hyderabad\"}},
+                {\"name\":\"Dhoni\",\"Age\":37,\"address\":{\"city\":\"Hyderabad\"}},
+                {\"name\":\"Virat\",\"age\":35,\"address\":{\"city\":\"Hyderabad\"}},
+                {\"name\":\"Jadeja\",\"age\":35,\"address\":{\"city\":\"Hyderabad\"}},
+                {\"name\":\"Jadeja\",\"age\":35,\"address\":{\"city\":\"Hyderabad\"}}]}";
 
-$cities = get_cities($input);
-echo "City of players\n";
-print_r($cities);
+    $input = strtolower($input);
 
-$unique_names = get_unique_names($names);
-echo "Unique Names\n";
-print_r($unique_names);
+    $input = convertToArray($input);
 
-$names_with_max_age = get_names_with_max_age($names, $age);
-echo "Players with max age\n";
-print_r($names_with_max_age);
+    $names = getNames($input);
+    echo "Name of players\n";
+    print_r($names);
+
+    $age = getAge($input);
+    echo "Age of players\n";
+    print_r($age);
+
+    $cities = getCities($input);
+    echo "City of players\n";
+    print_r($cities);
+
+    $uniqueNames = getUniqueNames($names);
+    echo "Unique Names\n";
+    print_r($uniqueNames);
+
+    $namesWithMaxAge = getNamesWithMaxAge($names, $age);
+    echo "Players with max age\n";
+    print_r($namesWithMaxAge);
 
