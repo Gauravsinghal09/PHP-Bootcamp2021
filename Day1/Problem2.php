@@ -1,6 +1,6 @@
 <?php
 
-function mask_number($input, $unmask_len)
+function mask_number($input, $unmask_len, $char)
 {
     $output = "";
     $input_len = strlen($input);
@@ -19,7 +19,7 @@ function mask_number($input, $unmask_len)
     }
 
     for ($pos = $unmask_start; $pos < $unmask_end; $pos++) {
-        $output[$pos] = '*';
+        $output[$pos] = $char;
     }
 
     return $output;
@@ -27,5 +27,5 @@ function mask_number($input, $unmask_len)
 
 $unmask_len = 2;
 $input = "9876543210";
-$output = mask_number($input, $unmask_len);
+$output = mask_number($input, $unmask_len, '*');
 echo "$output\n";
