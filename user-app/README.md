@@ -1,6 +1,8 @@
 ## User-App
 
-Routes:
+App to store users record.
+
+##Routes:
 
 CreateUser[POST] 127.0.0.1:8000/api/user ==> example request {"first_name": "Gaurav","last_name": "Singhal"}
 
@@ -13,6 +15,7 @@ UpdateUser[PUT] 127.0.0.1:8000/api/user/:id
 DeleteUser[DELETE] 127.0.0.1:8000/api/user/:id
 
 
+## Authorisation
 Use API Key in Postman for authorisation
 
 Key : token
