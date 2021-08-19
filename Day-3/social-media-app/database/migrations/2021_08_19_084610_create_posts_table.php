@@ -22,7 +22,7 @@ class CreatePostsTable extends Migration
             $table->timestamps();
         });
         Schema::table('posts', function($table) {
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
