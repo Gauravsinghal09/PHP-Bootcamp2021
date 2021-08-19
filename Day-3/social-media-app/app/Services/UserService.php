@@ -3,14 +3,23 @@
 namespace App\Services;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
 class UserService extends Service {
 
     public static function createUser(Request $request){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'email' => 'required|unique:users',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
         $user = new User;
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->save();
+        $data = $request->only($user->getFillable());
+        $user->fill($data)->save();
         return response()->json($user, 201);
     }
 
@@ -35,6 +44,5 @@ class UserService extends Service {
             return response() -> json("user does not exist", 400);
         }
     }
-
 
 }

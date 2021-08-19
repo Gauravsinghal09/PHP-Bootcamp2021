@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,7 +24,5 @@ Route::get('/user', [UserController::class, 'getAllUsers']);
 Route::get('/user/{id}', [UserController::class, 'getUserById']);
 Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
 Route::post('/post', [PostController::class, 'createPost']);
-//Route::get('post');
-//Route::post('/comment');
-//Route::get('/comment');
+Route::get('/post/{user_id}', [PostController::class, 'getAllPostsByUserId']);
 
