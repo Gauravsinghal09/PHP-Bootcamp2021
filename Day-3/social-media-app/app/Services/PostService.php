@@ -34,7 +34,38 @@ class PostService extends Service {
             return response()->json($posts, 200);
         }
         return response()->json("UserId does not exist", 200);
+    }
 
+    public static function getPostsByParams(Request $request){
+        $validator = Validator::make($request->all(), [
+            'post_id' => 'nullable|exists:posts,id',
+            'user_id' => 'nullable|exists:users,id',
+            'location' => 'nullable',
+            'mood' => ['nullable', Rule::in('happy', 'sad')],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $posts = Post::all();
+        if($request->has('post_id')){
+            $posts = $posts->where('id', $request->post_id);
+        }
+
+        if($request->has('user_id')){
+            $posts = $posts->where('user_id', $request->user_id);
+        }
+
+        if($request->has('location')){
+            $posts = $posts->where('location', $request->location);
+        }
+
+        if($request->has('mood')){
+            $posts = $posts->where('mood', $request->mood);
+        }
+
+        return response()->json($posts, 200);
     }
 
 }

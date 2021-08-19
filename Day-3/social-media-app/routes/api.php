@@ -25,4 +25,4 @@ Route::get('/user/{id}', [UserController::class, 'getUserById']);
 Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
 Route::post('/post', [PostController::class, 'createPost']);
 Route::get('/post/{user_id}', [PostController::class, 'getAllPostsByUserId']);
-
+Route::get('/post', [PostController::class, 'getPostsByParams']);

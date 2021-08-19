@@ -14,4 +14,8 @@ class PostController extends Controller
     public function getAllPostsByUserId(Request $request, $user_id){
         return PostService::getAllPostsByUserId($request, $user_id);
     }
+
+    public function getPostsByParams(Request $request){
+        return PostService::getPostsByParams($request);
+    }
 }
