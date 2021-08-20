@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -24,5 +25,7 @@ Route::get('/user', [UserController::class, 'getAllUsers']);
 Route::get('/user/{id}', [UserController::class, 'getUserById']);
 Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
 Route::post('/post', [PostController::class, 'createPost']);
-Route::get('/post/{user_id}', [PostController::class, 'getAllPostsByUserId']);
+//Route::get('/post/{user_id}', [PostController::class, 'getAllPostsByUserId']);
 Route::get('/post', [PostController::class, 'getPostsByParams']);
+Route::post('/comment', [CommentController::class, 'createComment']);
+Route::get('/comment', [CommentController::class, 'getCommentsByParams']);
