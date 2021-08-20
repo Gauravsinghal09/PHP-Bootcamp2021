@@ -18,8 +18,8 @@ class CommentValidator extends Validator
     public static function getCommentsByParamsValidator(Request $request)
     {
         return Validator::make($request->all(), [
-            'post_id' => 'nullable|exists:posts,id',
-            'comment_id' => 'nullable|exists:comments,id',
+            'post_id' => 'sometimes|exists:posts,id',
+            'comment_id' => 'sometimes|exists:comments,id',
         ]);
     }
 }

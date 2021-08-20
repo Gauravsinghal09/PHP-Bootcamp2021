@@ -1,47 +1,42 @@
 <?php
 
 namespace App\Services;
+use Facade\FlareClient\Http\Exceptions\InvalidData;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Comment;
-use Illuminate\Support\Facades\Validator;
+use App\Validators\CommentValidator;
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
+
+//use Illuminate\Support\Facades\Validator;
 
 class CommentService extends Service {
 
-    public static function createComment(Request $request){
+    public function createComment(Request $request){
 
-        $validator = Validator::make($request->all(), [
-            'body' => 'required|max:255',
-            'post_id'=>'required|exists:posts,id'
-        ]);
+        $validator = CommentValidator::createCommentValidator($request);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            throw new InvalidData($validator->errors());
         }
 
         $comment = new Comment;
         $data = $request->only($comment->getFillable());
-        $comment->fill($data)->save();
-        return response()->json($comment, 200);
-    }
-
-    public static function getAllCommentsByPostId(Request $request, $post_id){
-        if(Post::where('id', $post_id)->exists()){
-            $comments = User::find($post_id)->posts;
-            return response()->json($comments, 200);
+        if($comment->fill($data)->save()){
+            return response()->json(array("data" => $comment), 200);
         }
-        return response()->json("PostId does not exist", 200);
+        else{
+            throw new InternalErrorException("Comment not created, try again");
+        }
     }
 
-    public static function getCommentsByParams(Request $request){
-        $validator = Validator::make($request->all(), [
-            'post_id' => 'nullable|exists:posts,id',
-            'comment_id' => 'nullable|exists:comments,id',
-        ]);
+    public function getCommentsByParams(Request $request){
+        $validator = CommentValidator::getCommentsByParamsValidator($request);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            throw new InvalidData($validator->errors());
         }
+
 
         $comments = Comment::all();
         if($request->has('comment_id')){
@@ -52,6 +47,6 @@ class CommentService extends Service {
             $comments = $comments->where('post_id', $request->post_id);
         }
 
-        return response()->json($comments, 200);
+        return response()->json(array("data" => json_decode($comments->values())), 200);
     }
 }
