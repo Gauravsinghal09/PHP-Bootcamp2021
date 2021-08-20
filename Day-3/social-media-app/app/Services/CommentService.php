@@ -49,4 +49,26 @@ class CommentService extends Service {
 
         return response()->json(array("data" => json_decode($comments->values())), 200);
     }
+
+    public function updateComment(Request $request, $id){
+        $validator = CommentValidator::updateCommentValidator($request);
+
+        if ($validator->fails()) {
+            throw new InvalidData($validator->errors());
+        }
+
+        $comment = Comment::find($id);
+        $comment->body = is_null($request->body) ? $comment->body : $request->body;
+        if($comment->save()){
+            return response()->json(array("data" => $comment), 200);
+        }
+        else{
+            throw new InternalErrorException("Failed to update comment, try again");
+        }
+    }
+
+    public function deleteComment(Request $request, $id){
+        Comment::findorFail($id)->delete();
+        return response()->json(array('data' => "comment deleted"), 200);
+    }
 }

@@ -22,4 +22,11 @@ class CommentValidator extends Validator
             'comment_id' => 'sometimes|exists:comments,id',
         ]);
     }
+
+    public static function updateCommentValidator(Request $request)
+    {
+        return Validator::make($request->all(), [
+            'body' => 'sometimes|min:1|max:255',
+        ]);
+    }
 }
