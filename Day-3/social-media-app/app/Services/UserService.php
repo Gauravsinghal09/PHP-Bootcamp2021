@@ -1,48 +1,45 @@
 <?php
 
 namespace App\Services;
+use Facade\FlareClient\Http\Exceptions\InvalidData;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use App\Validators\UserValidator;
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
+
 
 class UserService extends Service {
 
-    public static function createUser(Request $request){
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            'email' => 'required|unique:users',
-        ]);
+    public function createUser(Request $request){
+        $validator = UserValidator::createUserValidator($request);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            throw new InvalidData($validator->errors());
         }
 
         $user = new User;
         $data = $request->only($user->getFillable());
-        $user->fill($data)->save();
-        return response()->json($user, 201);
-    }
-
-    public static function getAllUsers(Request $request){
-        return response()->json(User::get(), 200);
-    }
-
-    public static function getUserById(Request $request, $id){
-        if(User::where('id', $id)->exists()){
-            $user = User::where('id', $id)->get();
-            return response()->json($user, 200);
-        }
-        return response()->json("User does not exist", 200);
-    }
-
-    public static function deleteUser(Request $request, $id){
-        if(User::where('id', $id)->exists()){
-            User::where('id', $id)->delete();
-            return response()->json("user deleted", 200);
+        if($user->fill($data)->save()){
+            return response()->json($user, 201);
         }
         else{
-            return response() -> json("user does not exist", 400);
+            throw new InternalErrorException("User is not registered, try registering again");
         }
     }
 
+    public function getAllUsers(Request $request){
+        $dataArray = User::all();
+        return response()->json(array('data' => json_decode($dataArray)), 200);
+    }
+
+    public function getUserById(Request $request, $id){
+        $user = User::findorFail($id);
+        return response()->json(array('data' => json_decode($user)), 200);
+    }
+
+    public function deleteUser(Request $request, $id){
+        User::findorFail($id)->delete();
+        return response()->json(array('data' => "user deleted"), 200);
+    }
 }

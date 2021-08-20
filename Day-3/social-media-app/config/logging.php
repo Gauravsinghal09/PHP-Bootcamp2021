@@ -37,7 +37,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['custom_error'],
             'ignore_exceptions' => false,
         ],
 
@@ -100,6 +100,15 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'custom_error' => [
+            'driver' => 'single',
+            'level'  => 'error',
+            'path'   => storage_path('logs/errors.log'),
+            'bubble' => false
+        ],
+
+
     ],
 
 ];
