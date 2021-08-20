@@ -23,7 +23,7 @@ class UserController extends Controller{
             $response = $this->userService->createUser($request);
         }
         catch (InvalidData $e){
-            Log::error(json_decode($e->getMessage()));
+            Log::error($e->getMessage());
             return response()->json(json_decode($e->getMessage()), 400);
         }
         catch (InternalErrorException $e){

@@ -21,7 +21,7 @@ class UserService extends Service {
         $user = new User;
         $data = $request->only($user->getFillable());
         if($user->fill($data)->save()){
-            return response()->json($user, 201);
+            return response()->json(array("data" => $user), 201);
         }
         else{
             throw new InternalErrorException("User is not registered, try registering again");
