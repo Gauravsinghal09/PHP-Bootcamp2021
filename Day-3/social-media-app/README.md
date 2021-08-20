@@ -30,3 +30,6 @@
 ### Format for retrieving comments
 127.0.0.1:8000/api/comment?comment_id={comment_id}&post_id={post_id}
 
+### Schema:
+<img width="551" alt="Screenshot 2021-08-20 at 3 10 57 PM" src="https://user-images.githubusercontent.com/42150487/130214157-35e575ee-549a-42b0-afaa-076a2034552a.png">
+
