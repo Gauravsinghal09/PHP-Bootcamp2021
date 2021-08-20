@@ -1,51 +1,37 @@
 <?php
 
 namespace App\Services;
+use Facade\FlareClient\Http\Exceptions\InvalidData;
 use Illuminate\Http\Request;
 use App\Models\Post;
-use App\Models\User;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use App\Validators\PostValidator;
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
 
 class PostService extends Service {
 
-    public static function createPost(Request $request){
+    public function createPost(Request $request){
 
-        $validator = Validator::make($request->all(), [
-            'body' => 'required|max:255',
-            'location' => 'required|max:255',
-            'mood' => ['required', Rule::in('happy', 'sad')],
-            'user_id'=>'required|exists:users,id'
-        ]);
+        $validator = PostValidator::createPostValidator($request);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            throw new InvalidData($validator->errors());
         }
 
         $post = new Post;
         $data = $request->only($post->getFillable());
-        $post->fill($data)->save();
-        return response()->json($post, 200);
-    }
-
-    public static function getAllPostsByUserId(Request $request, $user_id){
-        if(User::where('id', $user_id)->exists()){
-            $posts = User::find($user_id)->posts;
-            return response()->json($posts, 200);
+        if($post->fill($data)->save()){
+            return response()->json(array("data" => $post), 200);
         }
-        return response()->json("UserId does not exist", 200);
+        else{
+            throw new InternalErrorException("Failed to create post, try again");
+        }
     }
 
-    public static function getPostsByParams(Request $request){
-        $validator = Validator::make($request->all(), [
-            'post_id' => 'nullable|exists:posts,id',
-            'user_id' => 'nullable|exists:users,id',
-            'location' => 'nullable',
-            'mood' => ['nullable', Rule::in('happy', 'sad')],
-        ]);
+    public function getPostsByParams(Request $request){
+        $validator = PostValidator::getPostsByParamsValidator($request);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            throw new InvalidData($validator->errors());
         }
 
         $posts = Post::all();
@@ -65,7 +51,6 @@ class PostService extends Service {
             $posts = $posts->where('mood', $request->mood);
         }
 
-        return response()->json($posts, 200);
+        return response()->json(array("data" => json_decode($posts->values())), 200);
     }
-
 }
