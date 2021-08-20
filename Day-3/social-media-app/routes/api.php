@@ -22,10 +22,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/user', [UserController::class, 'createUser']);
 Route::get('/user', [UserController::class, 'getAllUsers']);
-Route::get('/user/{id}', [UserController::class, 'getUserById']);
-Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
+Route::get('/user/{id}', [UserController::class, 'getUserById'])->where('id', '[0-9]+');
+Route::delete('/user/{id}', [UserController::class, 'deleteUser'])->where('id', '[0-9]+');
 Route::post('/post', [PostController::class, 'createPost']);
-//Route::get('/post/{user_id}', [PostController::class, 'getAllPostsByUserId']);
 Route::get('/post', [PostController::class, 'getPostsByParams']);
+Route::patch('/post/{id}', [PostController::class, 'updatePost'])->where('id', '[0-9]+');
+Route::delete('/post/{id}', [PostController::class, 'deletePost'])->where('id', '[0-9]+');
 Route::post('/comment', [CommentController::class, 'createComment']);
 Route::get('/comment', [CommentController::class, 'getCommentsByParams']);
+Route::patch('/comment/{id}', [CommentController::class, 'updateComment'])->where('id', '[0-9]+');
+Route::delete('/comment/{id}', [CommentController::class, 'deleteComment'])->where('id', '[0-9]+');
