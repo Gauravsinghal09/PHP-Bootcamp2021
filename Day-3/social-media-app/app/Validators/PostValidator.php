@@ -13,7 +13,7 @@ class PostValidator extends Validator
         return Validator::make($request->all(), [
             'body' => 'required|max:255',
             'location' => 'nullable|min:1|max:255',
-            'mood' => ['nullable|min:1', Rule::in('happy', 'sad', 'other')],
+            'mood' => ['nullable', Rule::in('happy', 'sad', 'other')],
             'user_id' => 'required|exists:users,id'
         ]);
     }
@@ -24,7 +24,16 @@ class PostValidator extends Validator
             'post_id' => 'sometimes|exists:posts,id',
             'user_id' => 'sometimes|exists:users,id',
             'location' => 'sometimes|min:1',
-            'mood' => ['sometimes|min:1', Rule::in('happy', 'sad', 'other')],
+            'mood' => ['sometimes', Rule::in('happy', 'sad', 'other')],
+        ]);
+    }
+
+    public static function updatePostValidator(Request $request)
+    {
+        return Validator::make($request->all(), [
+            'body' => 'sometimes|min:1|max:255',
+            'location' => 'sometimes|min:1|max:255',
+            'mood' => ['sometimes', Rule::in('happy', 'sad', 'other')],
         ]);
     }
 }

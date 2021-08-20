@@ -53,4 +53,28 @@ class PostService extends Service {
 
         return response()->json(array("data" => json_decode($posts->values())), 200);
     }
+
+    public function updatePost(Request $request, $id){
+        $validator = PostValidator::updatePostValidator($request);
+
+        if ($validator->fails()) {
+            throw new InvalidData($validator->errors());
+        }
+
+        $post = Post::find($id);
+        $post->body = is_null($request->body) ? $post->body : $request->body;
+        $post->location = is_null($request->location) ? $post->location : $request->location;
+        $post->mood = is_null($request->mood) ? $post->mood : $request->mood;
+        if($post->save()){
+            return response()->json(array("data" => $post), 200);
+        }
+        else{
+            throw new InternalErrorException("Failed to update post, try again");
+        }
+    }
+
+    public function deletePost(Request $request, $id){
+        Post::findorFail($id)->delete();
+        return response()->json(array('data' => "post deleted"), 200);
+    }
 }

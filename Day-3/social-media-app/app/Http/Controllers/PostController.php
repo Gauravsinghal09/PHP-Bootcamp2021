@@ -42,4 +42,30 @@ class PostController extends Controller
         }
         return $response;
     }
+
+    public function updatePost(Request $request, $id){
+        try{
+            $response = $this->postService->updatePost($request, $id);
+        }
+        catch(ModelNotFoundException $e){
+            Log::error($e->getMessage());
+            return response()->json(json_decode($e->getMessage()), 400);
+        }
+        catch(InternalErrorException $e){
+            Log::error($e->getMessage());
+            return response()->json(json_decode($e->getMessage()), 400);
+        }
+        return $response;
+    }
+
+    public function deletePost(Request $request, $id){
+        try{
+            $response = $this->postService->deletePost($request, $id);
+        }
+        catch (ModelNotFoundException $e){
+            Log::error($e->getMessage());
+            return response()->json($e->getMessage(), 400);
+        }
+        return $response;
+    }
 }
